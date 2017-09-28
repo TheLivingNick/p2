@@ -9,7 +9,7 @@
 
 <body>
 
-  <img src="images\scrabble-letters.jpg" alt="Scrabble Letters" height="277px" width="333px">
+  <img src="images/scrabble-letters.jpg" alt="Scrabble Letters" height="277" width="333">
 
   <h1>Scrabble Score Calculator</h1>
   <h3>Want to find the value of a word? Enter it below, set the modifiers, and hit the button to find out!</h3>
