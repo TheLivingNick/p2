@@ -125,7 +125,7 @@ class Form
     *
     * Stops after the first error for a given field
     *
-    * Available rules: alphaNumeric, alpha, numeric, required, email, min:x, max:x
+    * Available rules: alphaNumeric, alpha, numeric, required, email, min:x, max:x, minLength:x, maxLength:x
     */
     public function validate($fieldsToValidate)
     {
@@ -151,9 +151,9 @@ class Form
 
                 # Test failed
                 if (!$test) {
-                    $errors[] = 'The scored word'.$this->getErrorMessage($rule, $parameter); //made a slight change here for readability
+                    $errors[] = 'The scored word'.$this->getErrorMessage($rule, $parameter); # made a slight change here for readability
 
-                    if ($rule == 'required') break; //if the 'required' aspect fails, no need for other errors on that field
+                    if ($rule == 'required') break; # if the 'required' aspect fails, no need for other errors on that field
                 }
             }
         }
@@ -180,7 +180,7 @@ class Form
             'email' => ' is not a valid email address.',
             'min' => ' has to be greater than '.$parameter,
             'max' => ' has to be less than '.$parameter,
-            'maxLength' => ' has to be less than '.$parameter.' letters long', //added tests for min an max string length
+            'maxLength' => ' has to be less than '.$parameter.' letters long', # added tests for min an max string length
             'minLength' => ' has to be greater than '.$parameter.' letters long',
         ];
 

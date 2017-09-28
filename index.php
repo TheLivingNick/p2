@@ -47,7 +47,7 @@
         echo '</ul>';
       } else {
         foreach ($wordArray as $currentLetter) {
-          echo "<img class='tilePic' src='images\letter-$currentLetter.png'>";
+          echo "<img class='tilePic' src='images/letter-$currentLetter.png'>";
         }
         echo "<br> is worth $wordValue points!";
       }
