@@ -17,13 +17,13 @@
   <form method="get">
 
     <label for='userWord'>Enter word here: </label>
-    <input type='text' class='monospace' name='userWord' id='userWord' size='18' maxlength='15' value='<?=sanitize($userWord)?>'>
+    <input type='text' class='monospace' name='userWord' id='userWord' size='18' maxlength='20' value='<?=sanitize($userWord)?>'> <!-- left maxLength as 20 so the mexLength:15 validation can be tested -->
 
     <p>Are there any modifiers?</p>
     <label for='userWord'>No modifiers: </label>
-    <input type='radio' name='bonusMult' value='noBonus' <?php if ($bonusMult == "noBonus") echo 'CHECKED'?>>
+    <input type='radio' name='bonusMult' value='noBonus' <?php if ($bonusMult == "noBonus") echo 'CHECKED'?>><br>
     <label for='userWord'>Double Wore Score: </label>
-    <input type='radio' name='bonusMult' value='doubleScore' <?php if ($bonusMult == "doubleScore") echo 'CHECKED'?>>
+    <input type='radio' name='bonusMult' value='doubleScore' <?php if ($bonusMult == "doubleScore") echo 'CHECKED'?>><br>
     <label for='userWord'>Triple Word Score (nice!): </label>
     <input type='radio' name='bonusMult' value='tripleScore' <?php if ($bonusMult == "tripleScore") echo 'CHECKED'?>>
 
@@ -36,7 +36,22 @@
   </form>
 
   <div class="<?=$resultType?>">
-    <?=$resultText?>
+    <?php
+      if ($resultType == 'noResult') {
+        echo "This is where your answer will display!";
+      } elseif ($resultType == 'badResult') {
+        echo '<ul>';
+        foreach ($allErrors as $currentError) {
+          echo "<li>$currentError</li>";
+        }
+        echo '</ul>';
+      } else {
+        foreach ($wordArray as $currentLetter) {
+          echo "<img class='tilePic' src='images\letter-$currentLetter.png'>";
+        }
+        echo "<br> is worth $wordValue points!";
+      }
+    ?>
   </div>
 
 </body>

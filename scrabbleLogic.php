@@ -1,39 +1,37 @@
 <?php
 require('helpers.php');
+require('Form.php');
 
 # Create asscociative array of letter values from JSON
 $letterValuesJSON = file_get_contents('json/letterValues.json');
 $letterValues = json_decode($letterValuesJSON, true);
+$wordForm = new DWA\Form($_GET);
+$resultType = 'noResult';
 
 # if a word was entered, keep it after submit, otherwise default to empty string
-if (isset($_GET['userWord'])) {
-    $userWord = $_GET['userWord'];
-} else {
-    $userWord = '';
-}
+$userWord = $wordForm->get('userWord', '');
 
 # if the multiplier was changed from noBonus use the value in $_GET, other default to noBonus
-if (isset($_GET['bonusMult']) && $_GET['bonusMult'] != 'noBonus') {
-    $bonusMult = $_GET['bonusMult'];
-} else {
-    $bonusMult = 'noBonus';
-}
+$bonusMult = $wordForm->get('bonusMult', 'noBonus');
 
 # if the 7-letter bonus box was checked keep the check, otherwise default to blank
-if (isset($_GET['sevenBonus'])) {
-    $sevenBonus = 'CHECKED';
-} else {
-    $sevenBonus = '';
+$sevenBonus = $wordForm->get('sevenBonus') == 'on' ? 'CHECKED' : '';
+
+# if the form has been submitted, validate
+if ($wordForm->isSubmitted()) {
+  $allErrors = $wordForm->validate(['userWord' => 'required|alpha|minLength:2|maxLength:15']);
 }
 
-# check to see if there is an entered word, if the string is all letters, then computes the value of the word
-# if there is no entry a default result area is displayed; if there are non-letter characters, a bad result is displayed
-if ($userWord != '' && ctype_alpha($userWord)) {
+# if there is an error, display it
+# if there are no errors, then computes the value of the word
+if ($wordForm->hasErrors) {
+  $resultType = 'badResult';
+} else {
   $wordValue = 0;
   $wordArray = str_split($userWord);
 
   # loop through each letter and add its value to the total
-  foreach($wordArray as $index => $letter) {
+  foreach($wordArray as $letter) {
     $wordValue += $letterValues[strtolower($letter)];
   }
 
@@ -51,23 +49,8 @@ if ($userWord != '' && ctype_alpha($userWord)) {
     $wordValue += 50;
   }
 
-  # set result area to haveResult and seed the text for it
-  $resultType = 'haveResult';
-  $resultText = '';
-
-  # add image of each letter in sequence to show word in tile form
-  foreach ($wordArray as $index => $letter) {
-    $resultText = $resultText."<img class=\"tilePic\" src=\"images\\letter-".$letter.".png\">";
+  # if a word was scored set result area to haveResult - keeps initial page load from having error state
+  if ($wordForm->isSubmitted()) {
+    $resultType = 'haveResult';
   }
-
-  # append the total value of the word
-  $resultText = $resultText." is worth ".$wordValue." points!";
-} elseif ($userWord != '' && !ctype_alpha($userWord)) {
-  #if result contains non-letters, show a bad result
-  $resultType = 'badResult';
-  $resultText = "Your entry can only contain letters.";
-} else {
-  # if there is no entered word, show a placeholder result
-  $resultType = 'noResult';
-  $resultText = "This is where your result will display!";
 }
